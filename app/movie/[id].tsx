@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import useFetch from "@/services/usefetch";
 import { fetchMovieDetails } from "@/services/api";
+import FavoriteButton from "@/components/FavoriteButton";
 
 interface MovieInfoProps {
   label: string;
@@ -54,13 +55,29 @@ const Details = () => {
             resizeMode="stretch"
           />
 
-          <TouchableOpacity className="absolute bottom-5 right-5 rounded-full size-14 bg-white flex items-center justify-center">
-            <Image
-              source={icons.play}
-              className="w-6 h-7 ml-1"
-              resizeMode="stretch"
-            />
-          </TouchableOpacity>
+          <View className="absolute bottom-5 right-5 flex-row items-center gap-x-4">
+            <TouchableOpacity className="rounded-full size-14 bg-white flex items-center justify-center">
+              <Image
+                source={icons.play}
+                className="w-6 h-7 ml-1"
+                resizeMode="stretch"
+              />
+            </TouchableOpacity>
+            
+            <View className="bg-white/20 rounded-full backdrop-blur-sm">
+              <FavoriteButton
+                movie={{
+                  id: id as string,
+                  title: movie?.title || '',
+                  poster_path: movie?.poster_path || '',
+                  overview: movie?.overview || '',
+                  vote_average: movie?.vote_average || 0,
+                  release_date: movie?.release_date || '',
+                }}
+                size={32}
+              />
+            </View>
+          </View>
         </View>
 
         <View className="flex-col items-start justify-center mt-5 px-5">
