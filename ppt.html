@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurisation d'Applications Mobiles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 40px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: slideIn 0.6s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+        }
+
+        .slide h2 {
+            color: #e74c3c;
+            font-size: 1.7em;
+            margin-bottom: 20px;
+            border-left: 5px solid #e74c3c;
+            padding-left: 15px;
+        }
+
+        .slide h3 {
+            color: #27ae60;
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .slide ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .vulnerability-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .correction-box {
+            background: #e8f5e8;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .definition-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tool-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .security-advantage-box {
+            background: #f3e5f5;
+            border-left: 5px solid #9c27b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 12px 0;
+            overflow-x: auto;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            z-index: 1000;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.85em;
+        }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .status-satisfied {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status-non-compliant {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .status-na {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">18</span>
+        </div>
+
+        <div class="slide active">
+            <h1>Sécurisation d'Applications Mobiles</h1>
+            <div style="text-align: center; margin-top: 30px;">
+                <h2 style="color: #3498db; border: none; padding: 0;">Movie App - React Native avec Appwrite</h2>
+                <div style="margin-top: 30px; font-size: 1.2em;">
+                    <p><strong>Étudiant :</strong> AHJLI Oussama</p>
+                    <p><strong>Classe :</strong> SITCN S4</p>
+                    <p><strong>Module :</strong> S4 - Sécurité IT et Confiance Numérique</p>
+                    <p><strong>Date :</strong> 25 mai 2025</p>
+                </div>
+                <div style="margin-top: 40px;">
+                    <div class="definition-box">
+                        <h3>🎯 Objectif du Projet</h3>
+                        <p>Identifier, analyser et corriger les vulnérabilités de sécurité d'une application mobile selon les standards OWASP MASVS, en intégrant une stack technologique moderne et sécurisée.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Stack Technique Frontend</h1>
+            
+            <div class="tool-box">
+                <h3>🚀 React Native</h3>
+                <p><strong>Définition :</strong> Framework JavaScript open-source développé par Meta permettant de créer des applications mobiles natives pour iOS et Android avec une base de code unique.</p>
+                <p><strong>Avantages :</strong></p>
+                <ul>
+                    <li>Développement cross-platform avec performance native</li>
+                    <li>Code réutilisable entre iOS et Android (jusqu'à 95%)</li>
+                    <li>Hot Reload pour développement rapide</li>
+                    <li>Large écosystème et communauté active</li>
+                </ul>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🔒 Avantages Sécuritaires de React Native</h3>
+                <ul>
+                    <li><strong>Encapsulation native :</strong> Accès contrôlé aux APIs système</li>
+                    <li><strong>Sandboxing :</strong> Isolation de l'application dans un environnement sécurisé</li>
+                    <li><strong>Validation automatique :</strong> TypeScript pour la validation de types</li>
+                    <li><strong>Updates sécurisées :</strong> Déploiements via App Store/Play Store</li>
+                    <li><strong>Cryptographie intégrée :</strong> Accès aux services cryptographiques natifs</li>
+                </ul>
+            </div>
+
+            <div class="tool-box">
+                <h3>📝 TypeScript</h3>
+                <p><strong>Définition :</strong> Surensemble typé de JavaScript développé par Microsoft, ajoutant des types statiques optionnels à JavaScript.</p>
+                <p><strong>Avantages Sécuritaires :</strong></p>
+                <ul>
+                    <li><strong>Détection d'erreurs :</strong> Vérification des types à la compilation</li>
+                    <li><strong>Prévention d'injections :</strong> Validation stricte des paramètres</li>
+                    <li><strong>Code plus robuste :</strong> Réduction des bugs liés aux types</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Stack Technique Backend</h1>
+            
+            <div class="tool-box">
+                <h3>☁️ Appwrite - Backend-as-a-Service (BaaS)</h3>
+                <p><strong>Définition :</strong> Plateforme backend open-source qui fournit aux développeurs mobile et web tous les services backend essentiels dans une solution unifiée et sécurisée.</p>
+                <p><strong>Services Intégrés :</strong></p>
+                <ul>
+                    <li>Base de données NoSQL avec relations</li>
+                    <li>Authentification multi-provider</li>
+                    <li>Stockage de fichiers sécurisé</li>
+                    <li>Fonctions cloud serverless</li>
+                    <li>API REST et GraphQL automatiques</li>
+                </ul>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🛡️ Avantages Sécuritaires d'Appwrite</h3>
+                <ul>
+                    <li><strong>Chiffrement end-to-end :</strong> Données chiffrées en transit et au repos</li>
+                    <li><strong>Authentification robuste :</strong> OAuth2, JWT, MFA intégrés</li>
+                    <li><strong>Permissions granulaires :</strong> Contrôle d'accès par rôle et document</li>
+                    <li><strong>Protection CSRF/XSS :</strong> Headers de sécurité automatiques</li>
+                    <li><strong>Rate limiting intégré :</strong> Protection contre les abus</li>
+                    <li><strong>Audit trails :</strong> Journalisation complète des accès</li>
+                    <li><strong>HTTPS obligatoire :</strong> TLS 1.3 par défaut</li>
+                </ul>
+            </div>
+
+            <div class="two-column">
+                <div class="tool-box">
+                    <h3>🔐 OAuth Google</h3>
+                    <p><strong>Définition :</strong> Protocole d'autorisation permettant l'authentification via Google sans exposer les mots de passe.</p>
+                    <p><strong>Sécurité :</strong> Tokens temporaires, pas de stockage de mots de passe</p>
+                </div>
+                <div class="tool-box">
+                    <h3>📊 Appwrite Database</h3>
+                    <p><strong>Définition :</strong> Base de données NoSQL avec support des relations et validation de schéma.</p>
+                    <p><strong>Sécurité :</strong> Chiffrement, permissions par collection</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Architecture de Sécurité Globale</h1>
+            
+            <div class="definition-box">
+                <h3>🏗️ Approche Defense in Depth</h3>
+                <p>Stratégie de sécurité multicouches où chaque niveau fournit une protection indépendante, créant plusieurs barrières contre les attaques.</p>
+            </div>
+
+            <h2>Couches de Sécurité Implémentées</h2>
+
+            <div class="two-column">
+                <div>
+                    <div class="security-advantage-box">
+                        <h3>🎯 Couche Client (React Native)</h3>
+                        <ul>
+                            <li>Validation des entrées utilisateur</li>
+                            <li>Sanitisation des données</li>
+                            <li>Gestion sécurisée des erreurs</li>
+                            <li>Rate limiting côté client</li>
+                            <li>Journalisation sécurisée</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="security-advantage-box">
+                        <h3>🌐 Couche Réseau</h3>
+                        <ul>
+                            <li>HTTPS/TLS 1.3 obligatoire</li>
+                            <li>Certificate pinning</li>
+                            <li>Headers de sécurité</li>
+                            <li>Protection MITM</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="security-advantage-box">
+                        <h3>🔧 Couche Backend (Appwrite)</h3>
+                        <ul>
+                            <li>Authentification multi-facteurs</li>
+                            <li>Permissions granulaires</li>
+                            <li>Chiffrement des données</li>
+                            <li>Audit et monitoring</li>
+                            <li>Protection DDoS</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="security-advantage-box">
+                        <h3>💾 Couche Données</h3>
+                        <ul>
+                            <li>Chiffrement au repos</li>
+                            <li>Sauvegardes sécurisées</li>
+                            <li>Isolation des données</li>
+                            <li>Conformité RGPD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>OWASP MASVS - Mobile Application Security Verification Standard</h1>
+            
+            <div class="definition-box">
+                <h3>🛡️ Définition - OWASP MASVS</h3>
+                <p>Standard de vérification de la sécurité des applications mobiles développé par l'OWASP (Open Web Application Security Project). Il définit les exigences de sécurité pour les applications mobiles iOS et Android selon 3 niveaux : L1 (Standard), L2 (Défense en profondeur), L3 (Protection contre les menaces avancées).</p>
+            </div>
+
+            <h3>🎯 Notre Objectif : Niveau L1 (Standard)</h3>
+            <p>Niveau approprié pour la plupart des applications mobiles commerciales.</p>
+
+            <div class="two-column">
+                <div>
+                    <h3>📋 Catégories MASVS Évaluées</h3>
+                    <ul>
+                        <li><strong>MASVS-AUTH :</strong> Authentification et sessions</li>
+                        <li><strong>MASVS-STORAGE :</strong> Stockage sécurisé</li>
+                        <li><strong>MASVS-CRYPTO :</strong> Cryptographie</li>
+                        <li><strong>MASVS-NETWORK :</strong> Communication réseau</li>
+                        <li><strong>MASVS-PLATFORM :</strong> Interaction plateforme</li>
+                        <li><strong>MASVS-CODE :</strong> Qualité du code</li>
+                        <li><strong>MASVS-RESILIENCE :</strong> Anti-tampering</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="vulnerability-box">
+                        <h3>📊 État Initial</h3>
+                        <p><strong>Conformité :</strong> 55% (5/9 exigences)</p>
+                        <p><strong>Vulnérabilités :</strong> 4 non-conformités critiques</p>
+                        <ul>
+                            <li>Validation des entrées insuffisante</li>
+                            <li>Absence de rate limiting</li>
+                            <li>Journalisation non sécurisée</li>
+                            <li>Gestion d'erreurs exposante</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Vulnérabilité 1 : Validation Insuffisante des Entrées</h1>
+            
+            <div class="definition-box">
+                <h3>🔍 Définition - Input Validation & Sanitization</h3>
+                <p>Processus de vérification et de nettoyage des données saisies par l'utilisateur pour prévenir les injections malveillantes, assurer l'intégrité des données et respecter les contraintes métier.</p>
+            </div>
+
+            <div class="vulnerability-box">
+                <h3>⚠️ Problème Identifié (MASVS-CODE-4)</h3>
+                <p><strong>Description :</strong> L'application accepte directement les données utilisateur sans validation ni sanitisation lors de l'ajout de films aux favoris.</p>
+                
+                <div class="code-block">
+// Code initial vulnérable
+addToFavorites: async (movieData: any) => {
+  const response = await databases.createDocument(
+    DATABASE_ID, COLLECTIONS.FAVORITES, ID.unique(),
+    {
+      userId: user.$id,
+      movieId: movieData.id,    // ❌ Aucune validation
+      title: movieData.title,   // ❌ Données non sanitisées
+      // Risque d'injection de données malveillantes
+    }
+  );
+}
+                </div>
+
+                <h3>🚨 Risques Identifiés</h3>
+                <ul>
+                    <li><strong>Injection NoSQL :</strong> Manipulation des requêtes de base de données</li>
+                    <li><strong>XSS Stored :</strong> Stockage de scripts malveillants</li>
+                    <li><strong>Data Corruption :</strong> Insertion de données invalides</li>
+                    <li><strong>Business Logic Bypass :</strong> Contournement des règles métier</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Correction 1 : Système de Validation Robuste</h1>
+            
+            <div class="correction-box">
+                <h3>✅ Solution : Module de Sécurité Dédié</h3>
+                <p>Création d'un module centralisé pour toutes les opérations de validation et sanitisation.</p>
+                
+                <div class="code-block">
+// lib/security.ts - Module de sécurité
+export const sanitizeInput = (input: string): string => {
+  if (!input || typeof input !== 'string') return '';
+  return input.trim()
+    .replace(/[<>]/g, '')        // Suppression balises HTML
+    .replace(/['"]/g, '')        // Suppression quotes dangereuses
+    .slice(0, 1000);            // Limitation taille
+};
+
+export const validateMovieId = (movieId: any): boolean => {
+  return typeof movieId === 'number' && 
+         movieId > 0 && 
+         Number.isInteger(movieId) &&
+         movieId <= 999999999;    // Limite raisonnable
+};
+
+export const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && 
+         email.length <= 254 && 
+         !email.includes('<') && 
+         !email.includes('>');
+};
+                </div>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🔒 Application Sécurisée</h3>
+                <div class="code-block">
+// Application avec validation complète
+addToFavorites: async (movieData: any) => {
+  // 1. Validation stricte des entrées
+  if (!validateMovieId(movieData.id)) {
+    throw new SecurityError('ID de film invalide', 'VALIDATION_ERROR');
+  }
+  
+  const sanitizedTitle = sanitizeInput(movieData.title);
+  if (!sanitizedTitle || sanitizedTitle.length < 1) {
+    throw new SecurityError('Titre requis', 'VALIDATION_ERROR');
+  }
+  
+  // 2. Création sécurisée du document  
+  const response = await databases.createDocument(/*...*/);
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Vulnérabilité 2 : Absence de Limitation de Débit</h1>
+            
+            <div class="definition-box">
+                <h3>⏱️ Définition - Rate Limiting</h3>
+                <p>Mécanisme de contrôle qui limite le nombre de requêtes qu'un utilisateur ou une IP peut effectuer dans une période donnée. Essentiel pour prévenir les abus, les attaques par déni de service et protéger les ressources serveur.</p>
+            </div>
+
+            <div class="tool-box">
+                <h3>🛠️ Types de Rate Limiting</h3>
+                <ul>
+                    <li><strong>Token Bucket :</strong> Nombre fixe de tokens régénérés à intervalle régulier</li>
+                    <li><strong>Fixed Window :</strong> Limite par fenêtre de temps fixe</li>
+                    <li><strong>Sliding Window :</strong> Fenêtre glissante plus précise</li>
+                    <li><strong>Leaky Bucket :</strong> Débit constant de traitement des requêtes</li>
+                </ul>
+            </div>
+
+            <div class="vulnerability-box">
+                <h3>⚠️ Problème Identifié (MASVS-NETWORK-1)</h3>
+                <p><strong>Description :</strong> Aucune limitation sur les tentatives de connexion et actions utilisateur.</p>
+                
+                <div class="code-block">
+// Code vulnérable - Pas de protection
+signIn: async (email: string, password: string) => {
+  try {
+    return await account.createEmailSession(email, password);
+    // ❌ Tentatives illimitées = Attaque par force brute possible
+  } catch (error) {
+    throw error;
+  }
+}
+                </div>
+
+                <h3>🚨 Risques Critiques</h3>
+                <ul>
+                    <li><strong>Brute Force Attacks :</strong> Tentatives de cassage de mots de passe</li>
+                    <li><strong>API Abuse :</strong> Surcharge des services backend</li>
+                    <li><strong>Resource Exhaustion :</strong> Épuisement des quotas</li>
+                    <li><strong>Credential Stuffing :</strong> Test automatisé de combinaisons login/password</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Correction 2 : Rate Limiting Intelligent Multi-Niveaux</h1>
+            
+            <div class="correction-box">
+                <h3>✅ Solution : Système Adaptatif par Contexte</h3>
+                
+                <div class="code-block">
+// Implémentation Rate Limiter avec différentes stratégies
+class RateLimiter {
+  private attempts: Map<string, number[]> = new Map();
+  
+  // Configuration par type d'action
+  private configs = {
+    auth: { 
+      maxAttempts: 5, 
+      timeWindow: 300000,     // 5 minutes
+      blockDuration: 900000   // 15 min de blocage
+    },
+    favorites: { 
+      maxAttempts: 10, 
+      timeWindow: 60000       // 1 minute
+    },
+    search: { 
+      maxAttempts: 30, 
+      timeWindow: 60000       // Recherches plus permissives
+    },
+    general: { 
+      maxAttempts: 20, 
+      timeWindow: 60000 
+    }
+  };
+
+  checkLimit(userId: string, action: string): boolean {
+    const config = this.configs[action] || this.configs.general;
+    const now = Date.now();
+    const key = `${userId}_${action}`;
+    
+    // Nettoyage des tentatives expirées
+    const userAttempts = this.attempts.get(key) || [];
+    const validAttempts = userAttempts.filter(
+      time => now - time < config.timeWindow
+    );
+    
+    if (validAttempts.length >= config.maxAttempts) {
+      return false; // Limite atteinte
+    }
+    
+    // Enregistrer nouvelle tentative
+    validAttempts.push(now);
+    this.attempts.set(key, validAttempts);
+    return true;
+  }
+}
+                </div>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🎯 Configuration Intelligente</h3>
+                <ul>
+                    <li><strong>Authentification :</strong> 5 tentatives/5min + blocage 15min</li>
+                    <li><strong>Actions favoris :</strong> 10 actions/minute</li>
+                    <li><strong>Recherches :</strong> 30 requêtes/minute (usage normal)</li>
+                    <li><strong>Escalade progressive :</strong> Augmentation des délais en cas d'abus répétés</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Vulnérabilité 3 : Journalisation Non Sécurisée</h1>
+            
+            <div class="definition-box">
+                <h3>📝 Définition - Secure Logging</h3>
+                <p>Pratique d'enregistrement des événements applicatifs en évitant l'exposition d'informations sensibles, en adaptant le niveau de détail selon l'environnement (dev/prod) et en respectant les réglementations de confidentialité.</p>
+            </div>
+
+            <div class="tool-box">
+                <h3>📊 Niveaux de Logging Standards</h3>
+                <ul>
+                    <li><strong>ERROR :</strong> Erreurs critiques nécessitant intervention</li>
+                    <li><strong>WARN :</strong> Situations anormales mais non bloquantes</li>
+                    <li><strong>INFO :</strong> Événements métier importants</li>
+                    <li><strong>DEBUG :</strong> Informations détaillées pour développement</li>
+                    <li><strong>TRACE :</strong> Niveau le plus détaillé (développement uniquement)</li>
+                </ul>
+            </div>
+
+            <div class="vulnerability-box">
+                <h3>⚠️ Problème Identifié (MASVS-CODE-8)</h3>
+                <p><strong>Description :</strong> Utilisation de console.log en production exposant informations sensibles.</p>
+                
+                <div class="code-block">
+// Code vulnérable - Exposition d'informations
+signOut: async () => {
+  try {
+    await account.deleteSession('current');
+    console.log('Sign out successful'); // ❌ Log en production
+  } catch (error) {
+    console.error('Sign out failed:', error); // ❌ Détails erreur exposés
+    // Peut révéler : tokens, structure DB, stack traces...
+    throw error;
+  }
+}
+
+// Autres exemples problématiques trouvés :
+console.log('User data:', userData);     // ❌ Données personnelles
+console.log('API response:', response);  // ❌ Tokens, clés API
+console.debug('Query params:', params);  // ❌ Paramètres sensibles
+                </div>
+
+                <h3>🚨 Risques de Sécurité</h3>
+                <ul>
+                    <li><strong>Data Leakage :</strong> Fuite d'informations sensibles (PII, secrets)</li>
+                    <li><strong>Information Disclosure :</strong> Révélation de l'architecture interne</li>
+                    <li><strong>Attaque par force brute :</strong> Logs d'échec de connexion détaillés</li>
+                    <li><strong>Non-conformité RGPD :</strong> Stockage non autorisé de données</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Correction 3 : Journalisation Sécurisée et Centralisée</h1>
+            
+            <div class="correction-box">
+                <h3>✅ Solution : Module de Logging Environnement-Agnostique</h3>
+                <p>Mise en place d'un système de logging qui s'adapte à l'environnement d'exécution (développement ou production) et qui filtre les informations sensibles.</p>
+                
+                <div class="code-block">
+// lib/logger.ts - Module de logging sécurisé
+enum LogLevel {
+  ERROR, WARN, INFO, DEBUG, TRACE
+}
+
+// Définir le niveau de log max en fonction de l'environnement
+const MAX_LOG_LEVEL = __DEV__ ? LogLevel.TRACE : LogLevel.INFO; // __DEV__ est une variable globale de React Native
+
+const log = (level: LogLevel, message: string, data?: any) => {
+  if (level > MAX_LOG_LEVEL) {
+    return; // Ne pas loguer si le niveau est trop bas pour l'environnement
+  }
+
+  let formattedMessage = `[${LogLevel[level]}] ${new Date().toISOString()} - ${message}`;
+  
+  if (data) {
+    // Filtrer les données sensibles avant de loguer
+    const sensitiveKeys = ['password', 'token', 'apiKey', 'secret', 'creditCard'];
+    const filteredData = JSON.parse(JSON.stringify(data)); // Clonage profond
+    sensitiveKeys.forEach(key => {
+      if (filteredData[key]) {
+        filteredData[key] = '[REDACTED]';
+      }
+    });
+    formattedMessage += ` Data: ${JSON.stringify(filteredData)}`;
+  }
+
+  switch (level) {
+    case LogLevel.ERROR:
+      console.error(formattedMessage);
+      // Envoyer à un service de monitoring d'erreurs en production
+      if (!__DEV__) {
+        // Sentry.captureException(new Error(message)); 
+      }
+      break;
+    case LogLevel.WARN:
+      console.warn(formattedMessage);
+      break;
+    case LogLevel.INFO:
+      console.info(formattedMessage);
+      break;
+    case LogLevel.DEBUG:
+      console.debug(formattedMessage);
+      break;
+    case LogLevel.TRACE:
+      console.log(formattedMessage); // console.log pour TRACE uniquement en dev
+      break;
+  }
+};
+
+export const Logger = {
+  error: (msg: string, data?: any) => log(LogLevel.ERROR, msg, data),
+  warn: (msg: string, data?: any) => log(LogLevel.WARN, msg, data),
+  info: (msg: string, data?: any) => log(LogLevel.INFO, msg, data),
+  debug: (msg: string, data?: any) => log(LogLevel.DEBUG, msg, data),
+  trace: (msg: string, data?: any) => log(LogLevel.TRACE, msg, data),
+};
+                </div>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🔒 Mise en œuvre et Bonnes Pratiques</h3>
+                <ul>
+                    <li>Utilisation systématique du module `Logger`</li>
+                    <li>Jamais de `console.log` direct en production</li>
+                    <li>Filtrage automatique des informations sensibles</li>
+                    <li>Intégration avec des outils de gestion de logs centralisés (Ex: ELK Stack, Splunk)</li>
+                    <li>Rotation des logs et archivage sécurisé</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Vulnérabilité 4 : Gestion d'Erreurs Exposer</h1>
+            
+            <div class="definition-box">
+                <h3>🚨 Définition - Secure Error Handling</h3>
+                <p>Processus de gestion des erreurs applicatives de manière à ne pas révéler d'informations sensibles (traces de pile, détails techniques de l'implémentation, chemins de fichiers, messages d'erreur de base de données) aux utilisateurs finaux ou aux attaquants.</p>
+            </div>
+
+            <div class="vulnerability-box">
+                <h3>⚠️ Problème Identifié (MASVS-CODE-7)</h3>
+                <p><strong>Description :</strong> L'application renvoie des messages d'erreur détaillés directement à l'utilisateur.</p>
+                
+                <div class="code-block">
+// Code vulnérable - Détails d'erreur exposés
+fetchUserProfile: async (userId: string) => {
+  try {
+    const user = await databases.getDocument(DATABASE_ID, COLLECTIONS.USERS, userId);
+    return user;
+  } catch (error: any) {
+    // ❌ L'erreur brute d'Appwrite ou DB est renvoyée
+    // Exemple : "AppwriteException: document_not_found", "Invalid ID", "Network error"
+    // ou pire, une stack trace complète si non gérée
+    throw error; 
+  }
+}
+                </div>
+
+                <h3>🚨 Risques de Sécurité</h3>
+                <ul>
+                    <li><strong>Information Disclosure :</strong> Révélation de l'architecture, noms de tables/colonnes, versions de composants.</li>
+                    <li><strong>Attaque ciblée :</strong> Utilisation des informations pour affiner des attaques (ex: injection SQL/NoSQL).</li>
+                    <li><strong>Déni de service :</strong> Exploitation des erreurs pour causer des plantages.</li>
+                    <li><strong>Mauvaise expérience utilisateur :</strong> Messages incompréhensibles et non amicaux.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Correction 4 : Gestion d'Erreurs Robuste et Amicale</h1>
+            
+            <div class="correction-box">
+                <h3>✅ Solution : Interception et Messages Génériques</h3>
+                <p>Mettre en place un mécanisme global de gestion des erreurs qui intercepte les exceptions, les loggue en détail pour les administrateurs, et présente des messages génériques aux utilisateurs.</p>
+                
+                <div class="code-block">
+// Global Error Handler dans un contexte ou hook React Native
+const handleError = (error: any, context: string = 'Application') => {
+  Logger.error(`Unhandled error in ${context}: ${error.message}`, error); // Log complet pour l'admin
+  
+  let userMessage = "Une erreur inattendue est survenue. Veuillez réessayer.";
+
+  if (error.code === 401) { // Exemple : Code d'erreur Appwrite pour non autorisé
+    userMessage = "Vous n'êtes pas autorisé à effectuer cette action.";
+  } else if (error.code === 404) {
+    userMessage = "La ressource demandée n'a pas été trouvée.";
+  }
+  // Ajouter d'autres conditions spécifiques si nécessaire
+
+  // Afficher un message convivial à l'utilisateur (ex: Toast, alerte)
+  // Toast.show({
+  //   type: 'error',
+  //   text1: 'Erreur',
+  //   text2: userMessage,
+  //   visibilityTime: 4000,
+  // });
+
+  return userMessage; // Peut être retourné pour un affichage local
+};
+
+// Utilisation dans l'application
+fetchUserProfile: async (userId: string) => {
+  try {
+    const user = await databases.getDocument(DATABASE_ID, COLLECTIONS.USERS, userId);
+    return user;
+  } catch (error) {
+    const friendlyMessage = handleError(error, `WorkspaceUserProfile for user ${userId}`);
+    throw new Error(friendlyMessage); // Relancer une erreur avec un message public
+  }
+}
+                </div>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>🔒 Avantages de l'Approche</h3>
+                <ul>
+                    <li><strong>Réduction de la surface d'attaque :</strong> Pas d'informations techniques exposées.</li>
+                    <li><strong>Meilleure UX :</strong> Messages clairs et utiles pour l'utilisateur.</li>
+                    <li><strong>Débogage facilité :</strong> Les logs backend contiennent tous les détails nécessaires.</li>
+                    <li><strong>Prévention des attaques par énumération :</strong> Évite de confirmer l'existence de ressources.</li>
+                    <li><strong>Conformité :</strong> Aide à respecter les normes de confidentialité.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Conformité OWASP MASVS Post-Corrections</h1>
+            
+            <div class="definition-box">
+                <h3>✅ Évaluation Finale - Objectif L1 Atteint</h3>
+                <p>Après l'implémentation des corrections, l'application atteint un niveau de conformité significatif avec le standard OWASP MASVS L1.</p>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Exigence MASVS</th>
+                        <th>Description</th>
+                        <th>Statut Initial</th>
+                        <th>Statut Final</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MASVS-AUTH-1</td>
+                        <td>Authentification robuste (Appwrite)</td>
+                        <td class="status-satisfied">Satisfait</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-STORAGE-1</td>
+                        <td>Stockage de données sensibles sécurisé</td>
+                        <td class="status-satisfied">Satisfait</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-CRYPTO-1</td>
+                        <td>Utilisation de cryptographie forte (Appwrite)</td>
+                        <td class="status-satisfied">Satisfait</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-NETWORK-1</td>
+                        <td>Protection du réseau (Rate Limiting, HTTPS)</td>
+                        <td class="status-non-compliant">Non-conforme</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-NETWORK-2</td>
+                        <td>Validation des certificats (HTTPS par défaut)</td>
+                        <td class="status-satisfied">Satisfait</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-PLATFORM-1</td>
+                        <td>Interaction sécurisée avec la plateforme OS</td>
+                        <td class="status-satisfied">Satisfait</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-CODE-4</td>
+                        <td>Validation et sanitisation des entrées</td>
+                        <td class="status-non-compliant">Non-conforme</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-CODE-7</td>
+                        <td>Gestion sécurisée des erreurs</td>
+                        <td class="status-non-compliant">Non-conforme</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                    <tr>
+                        <td>MASVS-CODE-8</td>
+                        <td>Journalisation sécurisée</td>
+                        <td class="status-non-compliant">Non-conforme</td>
+                        <td class="status-satisfied">Satisfait</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Taux de Conformité Final :</strong> 100% (9/9 exigences L1)</p>
+        </div>
+
+        <div class="slide">
+            <h1>Leçons Apprises et Meilleures Pratiques</h1>
+            
+            <div class="definition-box">
+                <h3>🧠 Importance de la Sécurité "Shift-Left"</h3>
+                <p>Intégrer la sécurité dès les premières étapes du cycle de développement (SDLC) plutôt que de la traiter en fin de projet. Cela permet de détecter et de corriger les vulnérabilités plus tôt, réduisant ainsi les coûts et les risques.</p>
+            </div>
+
+            <h2>Meilleures Pratiques Adoptées</h2>
+            <ul>
+                <li><strong>Validation continue :</strong> Valider et nettoyer toutes les entrées utilisateur, côté client et serveur.</li>
+                <li><strong>Approche "Zero Trust" :</strong> Ne jamais faire confiance implicitement à aucune entité, qu'elle soit interne ou externe au réseau.</li>
+                <li><strong>Gestion des erreurs :</strong> Ne jamais exposer d'informations techniques dans les messages d'erreur aux utilisateurs.</li>
+                <li><strong>Journalisation :</strong> Loguer de manière sécurisée, en filtrant les données sensibles et en adaptant le niveau de détail à l'environnement.</li>
+                <li><strong>Limitation de débit (Rate Limiting) :</strong> Protéger les API et les ressources contre les abus et les attaques par force brute.</li>
+                <li><strong>Authentification et Autorisation :</strong> Utiliser des mécanismes robustes (MFA, permissions granulaires) et des tokens à durée de vie limitée.</li>
+                <li><strong>Mises à jour régulières :</strong> Maintenir à jour toutes les dépendances et librairies.</li>
+                <li><strong>Tests de sécurité :</strong> Effectuer des tests réguliers (tests d'intrusion, analyse de code statique/dynamique).</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h1>Outils de Sécurité Utilisés et Recommandés</h1>
+            
+            <div class="two-column">
+                <div class="tool-box">
+                    <h3>🛠️ Outils d'Analyse et de Test</h3>
+                    <ul>
+                        <li><strong>OWASP ZAP :</strong> Proxy d'interception pour l'analyse de vulnérabilités web et API.</li>
+                        <li><strong>MobSF (Mobile Security Framework) :</strong> Plateforme automatisée pour l'analyse statique et dynamique des applications mobiles.</li>
+                        <li><strong>Burp Suite :</strong> Suite d'outils pour les tests de pénétration des applications web.</li>
+                        <li><strong>ESLint/Prettier :</strong> Pour la qualité du code et la détection de motifs de code potentiellement risqués.</li>
+                        <li><strong>npm audit / yarn audit :</strong> Pour l'analyse des vulnérabilités dans les dépendances JavaScript.</li>
+                    </ul>
+                </div>
+                <div class="tool-box">
+                    <h3>⚙️ Solutions de Sécurité Intégrées</h3>
+                    <ul>
+                        <li><strong>Appwrite Security Features :</strong> Permissions, chiffrement, rate limiting intégré.</li>
+                        <li><strong>OAuth Providers (Google, Apple) :</strong> Pour une authentification déléguée et sécurisée.</li>
+                        <li><strong>HTTPS/TLS :</strong> Chiffrement des communications réseau.</li>
+                        <li><strong>React Native Security Best Practices :</strong> Utilisation des fonctionnalités de sécurité natives de la plateforme.</li>
+                        <li><strong>KeyChain / Android Keystore :</strong> Stockage sécurisé des données sensibles sur l'appareil.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="security-advantage-box">
+                <h3>📈 Surveillance et Réponse aux Incidents</h3>
+                <p>Mettre en place des systèmes de monitoring des logs et des performances pour détecter rapidement les anomalies et les tentatives d'attaque, et disposer d'un plan de réponse aux incidents.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Perspectives et Améliorations Futures</h1>
+            
+            <h2>Améliorations Possibles</h2>
+            <ul>
+                <li><strong>MASVS L2/L3 :</strong> Atteindre des niveaux de sécurité supérieurs pour les applications critiques (ex: finance, santé).</li>
+                <li><strong>Code Obfuscation & Anti-Tampering :</strong> Rendre le reverse engineering plus difficile et détecter les modifications de code.</li>
+                <li><strong>Mobile Device Management (MDM) :</strong> Pour les applications d'entreprise nécessitant un contrôle strict sur les appareils.</li>
+                <li><strong>Intégration CI/CD Sécurisée :</strong> Automatiser les tests de sécurité dans le pipeline de déploiement.</li>
+                <li><strong>Tests d'intrusion réguliers :</strong> Engager des experts externes pour des audits de sécurité approfondis.</li>
+                <li><strong>Gestion des secrets améliorée :</strong> Utiliser des solutions de gestion de secrets dédiées (ex: HashiCorp Vault) pour les clés API et autres informations sensibles.</li>
+            </ul>
+
+            <div class="security-advantage-box">
+                <h3>💡 Veille Technologique Continue</h3>
+                <p>La sécurité est un domaine en constante évolution. Une veille technologique proactive est indispensable pour se tenir informé des nouvelles menaces et des meilleures pratiques.</p>
+            </div>
+
+            <div class="definition-box">
+                <h3>🔗 Culture de la Sécurité</h3>
+                <p>Sensibiliser toutes les équipes (développeurs, QA, opérations) aux enjeux de sécurité et promouvoir une culture où la sécurité est la responsabilité de tous.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1>Questions & Remerciements</h1>
+            <div style="text-align: center; margin-top: 50px; font-size: 1.5em;">
+                <p>Merci de votre attention !</p>
+                <p style="margin-top: 30px;">Des questions ?</p>
+            </div>
+            <div style="margin-top: 80px; text-align: center;">
+                <p style="font-size: 1.1em; color: #555;">AHJLI Oussama - SITCN S4</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn" disabled>Précédent</button>
+        <button id="nextBtn" class="nav-btn">Suivant</button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+            document.getElementById('currentSlide').textContent = index + 1;
+            updateNavigationButtons();
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = (currentSlideIndex === 0);
+            nextBtn.disabled = (currentSlideIndex === totalSlides - 1);
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+
+        // Initialisation
+        showSlide(currentSlideIndex);
+    </script>
+</body>
+</html>
